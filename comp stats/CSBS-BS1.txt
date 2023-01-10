@@ -1,0 +1,90 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+#data = np.random.randint(0, 1000, size=(25, 3))
+#df = pd.DataFrame(data, columns=['random_1', 'random_2', 'random_3'])
+#df.to_csv('/drive/My Drive/Colab Notebooks/file.csv',index=False)
+
+data=pd.read_csv('file.csv')
+x=data.iloc[:,:].values
+print(x.shape)
+sum=0
+var=0
+sum_column=0
+sum_row=0
+var_row=0
+var_column=0
+l_row_sum=[]
+l_row_mean=[]
+l_column_sum=[]
+l_column_mean=[]
+l_row_var=[]
+l_column_var=[]
+cov=0
+corr=0
+l_corr=[]
+l_cov=[]
+
+for i in range(x.shape[0]):
+    for j in range(x.shape[1]):
+        sum=sum+x[i][j]
+for i in range(x.shape[0]):
+    for j in range(x.shape[1]):
+        var=var+(x[i][j]-sum/(x.shape[0]*x.shape[1]))**2
+print('sum by formula is', sum)
+print('mean by formula is', sum/(x.shape[0]*x.shape[1]))
+print('variance by formula is', var/(x.shape[0]*x.shape[1]))
+print('sum by inbuilt function is', np.sum(x))
+print('mean by inbuilt function is', np.mean(x))
+print('variance by inbuilt function is', np.var(x))
+print('--------------------------------------')
+for i in range(x.shape[1]):
+    sum_column=0
+    for j in range(x.shape[0]):
+        sum_column=sum_column+x[j][i]
+    l_column_sum.append(sum_column)
+    l_column_mean.append((sum_column/x.shape[0]))
+for i in range(x.shape[1]):
+    var_column=0
+    for j in range(x.shape[0]):
+        var_column=var_column+(x[j][i]-l_column_mean[i])**2
+    l_column_var.append((var_column/x.shape[0]))
+print('sum of columns by formula is ', l_column_sum)
+print('mean of columns by formula is ', l_column_mean)
+print('variance of columns by formula is ', l_column_var)
+print('sum of columns by inbuilt function is ', np.sum(x,axis=0))
+print('mean of columns by inbuilt function is ', np.mean(x,axis=0))
+print('variance of columns by inbuilt function is ', np.var(x,axis=0))
+print('-----------------------------------------------')
+for i in range(x.shape[0]):
+    sum_rows=0
+    for j in range(x.shape[1]):
+        sum_rows=sum_rows+x[i][j]
+    l_row_sum.append(sum_rows)
+    l_row_mean.append((sum_rows/x.shape[1]))
+for i in range(x.shape[0]):
+    var_row=0
+    for j in range(x.shape[1]):
+        var_row=var_row+(x[i][j]-l_row_mean[i])**2
+    l_row_var.append((var_row/x.shape[1]))
+print('sum of rows by formula is ', l_row_sum)
+print('mean of rows by formula is ', l_row_mean)
+print('variance of rows by formula is ', l_row_var)
+print('sum of rows by inbuilt function is ', np.sum(x,axis=1))
+print('mean of rows by inbuilt function is ', np.mean(x,axis=1))
+print('variance of rows by inbuilt function is ', np.var(x,axis=1))
+print('-------------------------------------------------')
+for i in range(x.shape[1]-1):
+    cov=0
+    for j in range(x.shape[0]):
+        cov=cov+((x[j][i]-l_column_mean[i])*(x[j][i+1]-l_column_mean[i+1]))
+    l_cov.append(cov/x.shape[0]-1)
+print('covariance by formula is ', l_cov)
+print('covariance by inbuilt function is ', np.cov(x[:,1],x[:,2]))
+
+print(np.corrcoef(x[:,0],x[:,1]))
+sns.scatterplot(x='random_1',y='random_2',data=data)
+#plt.scatter(np.corrcoef(x[:,0],x[:,1]))
+sns.lmplot(x='random_1',y='random_2',data=data)
